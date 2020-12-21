@@ -9,10 +9,10 @@ namespace TabuSearch
         public IProblem Problem { get; }
         public int MaxIterations { get; }
 
-        public TabuSearch(IProblem problem, int maxInterations)
+        public TabuSearch(IProblem problem, int maxIterations)
         {
             this.Problem = problem;
-            this.MaxIterations = maxInterations;
+            this.MaxIterations = maxIterations;
         }
 
         public double ValueFlip(int valueIndex)
@@ -23,12 +23,12 @@ namespace TabuSearch
                 var v = Problem.Autocorrelations[p];
                 if (p < Problem.SolutionArray.Count - valueIndex)
                 {
-                    v = v - 2 * Problem.AutocorrelationProducts[p][valueIndex - 1];
+                    v -= 2 * Problem.AutocorrelationProducts[p][valueIndex - 1];
                 }
 
                 if (p < valueIndex - 1)
                 {
-                    v = v - 2 * Problem.AutocorrelationProducts[p][valueIndex - 1 - p];
+                    v -= 2 * Problem.AutocorrelationProducts[p][valueIndex - 1 - p];
                 }
 
                 f += v * v;
