@@ -6,7 +6,9 @@ namespace TabuSearch
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var problem = new LADS();
+            problem.GenerateRandomSolution();
+            problem.CalculateFitness();
         }
     }
 }
