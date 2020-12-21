@@ -6,7 +6,7 @@ namespace TabuSearch
 {
     public class LADS : IProblem
     {
-        public List<int> SolutionArray { get; private set; }
+        public List<int> SolutionArray { get; set; }
         public int SolutionLength { get; }
 
         public List<List<double>> AutocorrelationProducts { get; set; }  //T(s)

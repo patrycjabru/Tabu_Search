@@ -6,10 +6,11 @@
         {
             var problem = new LADS();
             problem.GenerateRandomSolution();
-            problem.CalculateFitness();
+            var initialFitness = problem.CalculateFitness();
 
-            var search = new TabuSearch(problem);
-            search.ValueFlip(3);
+            var search = new TabuSearch(problem, 200);
+            var result = search.Solve();
+            var finalFitness = problem.CalculateFitness();
         }
     }
 }
