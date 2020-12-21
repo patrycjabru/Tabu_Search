@@ -1,36 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace TabuSearch
 {
     public class LADS : IProblem
     {
-        public List<int> SolutionArray { get; }
+        public List<int> SolutionArray { get; private set; }
         public int SolutionLength { get; }
-        public int AutocorrelationFactor { get; }
 
-        public LADS(int solutionLength = 10, int autocorrelationFactor = 3)
+        public List<List<double>> AutocorrelationProducts { get; set; }  //T(s)
+
+        public List<double> Autocorrelations { get; set; }             //C(s)
+
+        public LADS(int solutionLength = 10)
         {
             SolutionLength = solutionLength;
             SolutionArray = new List<int>();
-            AutocorrelationFactor = autocorrelationFactor;
         }
 
         public double CalculateFitness()
         {
-            double energy = 0;
-            var autocorrelations = CalculateAperiodicAutocorrelation();
-            for (var i = 0; i < AutocorrelationFactor; i++)
-            {
-                energy += autocorrelations[i] * autocorrelations[i];
-            }
+            CalculateAperiodicAutocorrelation();
+            double energy = Autocorrelations.Sum();
 
             return energy;
         }
 
         public void GenerateRandomSolution()
         {
+            SolutionArray = new List<int>();
             var rand = new Random();
             for (var i = 0; i < SolutionLength; i++)
             {
@@ -38,15 +37,21 @@ namespace TabuSearch
             }
         }
 
-        private List<double> CalculateAperiodicAutocorrelation()
+        private void CalculateAperiodicAutocorrelation()
         {
-            var autocorelations = new List<double>();
-            for (var i = 0; i < SolutionLength - AutocorrelationFactor; i++)
+            AutocorrelationProducts = new List<List<double>>();
+            Autocorrelations = new List<double>();
+            for (var k = 1; k < SolutionLength; k++)
             {
-                autocorelations.Add(SolutionArray[i] * SolutionArray[i + AutocorrelationFactor]);
-            }
+                AutocorrelationProducts.Add(new List<double>());
+                for (var i = 0; i < SolutionLength - k; i++)
+                {
+                    var product = SolutionArray[i] * SolutionArray[i + k];
+                    AutocorrelationProducts[k-1].Add(product);
+                }
 
-            return autocorelations;
+                Autocorrelations.Add(AutocorrelationProducts[k-1].Sum());
+            }
         }
     }
 }

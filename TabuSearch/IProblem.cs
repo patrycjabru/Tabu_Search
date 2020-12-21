@@ -6,7 +6,9 @@ namespace TabuSearch
 {
     interface IProblem
     {
-        public List<int> SolutionArray { get; }
+        List<int> SolutionArray { get; }
+        List<List<double>> AutocorrelationProducts { get; set; }
+        List<double> Autocorrelations { get; set; }             
         double CalculateFitness();
         void GenerateRandomSolution();
     }

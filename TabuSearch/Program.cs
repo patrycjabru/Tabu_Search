@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TabuSearch
+﻿namespace TabuSearch
 {
     class Program
     {
@@ -9,6 +7,9 @@ namespace TabuSearch
             var problem = new LADS();
             problem.GenerateRandomSolution();
             problem.CalculateFitness();
+
+            var search = new TabuSearch(problem);
+            search.ValueFlip(3);
         }
     }
 }
