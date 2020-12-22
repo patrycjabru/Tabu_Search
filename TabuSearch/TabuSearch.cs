@@ -39,10 +39,10 @@ namespace TabuSearch
         public (List<int> solution, double fitness) Solve()
         {
             var rand = new Random();
-            var m = new List<double>();
+            var tabuList = new List<double>();
             for (var i = 0; i < Problem.SolutionArray.Count; i++)
             {
-                m.Add(0);
+                tabuList.Add(0);
             }
 
             var minTabu = MaxIterations / 10;
@@ -53,33 +53,35 @@ namespace TabuSearch
 
             for (var k = 1; k <= MaxIterations; k++)
             {
-                var bestFitness = double.MaxValue;
-                var bestSolution = Problem.SolutionArray;
-                var bestIndex = 1;
+                var bestFitnessInIteration = double.MaxValue;
+                var bestSolutionInIteration = Problem.SolutionArray;
+                var bestIndexInIteration = 1;
 
                 for (var i = 1; i <= solution.Count; i++)
                 {
                     var possibleSolution = Flip(i);
                     var possibleFitness= ValueFlip(i);
-                    if (k >= m[i-1] || possibleFitness < fitness)
+                    if (k >= tabuList[i-1] || possibleFitness < fitness)
                     {
-                        if (possibleFitness < bestFitness)
+                        if (possibleFitness < bestFitnessInIteration)
                         {
-                            bestFitness = possibleFitness;
-                            bestSolution = possibleSolution;
-                            bestIndex = i;
+                            bestFitnessInIteration = possibleFitness;
+                            bestSolutionInIteration = possibleSolution;
+                            bestIndexInIteration = i;
                         }
                     }
                 }
-                Problem.SolutionArray = bestSolution;
+                Problem.SolutionArray = bestSolutionInIteration;
                 Problem.CalculateFitness();
-                m[bestIndex-1] = k + minTabu + rand.Next(extraTabu);
-                if (bestFitness < fitness)
+                tabuList[bestIndexInIteration-1] = k + minTabu + rand.Next(extraTabu);
+                if (bestFitnessInIteration < fitness)
                 {
-                    solution = bestSolution;
-                    fitness = bestFitness;
+                    solution = bestSolutionInIteration;
+                    fitness = bestFitnessInIteration;
                 }
             }
+
+            Problem.SolutionArray = solution;
 
             return (solution, fitness);
         }

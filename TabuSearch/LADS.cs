@@ -11,7 +11,7 @@ namespace TabuSearch
 
         public List<List<double>> AutocorrelationProducts { get; set; }  //T(s)
 
-        public List<double> Autocorrelations { get; set; }             //C(s)
+        public List<double> Autocorrelations { get; set; }               //C(s)
 
         public LADS(int solutionLength = 10)
         {
@@ -22,7 +22,11 @@ namespace TabuSearch
         public double CalculateFitness()
         {
             CalculateAperiodicAutocorrelation();
-            double energy = Autocorrelations.Sum();
+            var energy = 0.0;
+            foreach (var c in Autocorrelations)
+            {
+                energy += c * c;
+            }
 
             return energy;
         }

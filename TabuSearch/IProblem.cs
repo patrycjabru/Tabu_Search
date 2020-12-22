@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TabuSearch
 {
-    interface IProblem
+    public interface IProblem
     {
         List<int> SolutionArray { get; set; }
         List<List<double>> AutocorrelationProducts { get; set; }
