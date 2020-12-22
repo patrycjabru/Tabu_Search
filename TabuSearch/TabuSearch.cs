@@ -28,7 +28,7 @@ namespace TabuSearch
 
                 if (p < valueIndex - 1)
                 {
-                    v -= 2 * Problem.AutocorrelationProducts[p][valueIndex - 1 - p];
+                    v -= 2 * Problem.AutocorrelationProducts[p][valueIndex - 1 - p - 1];
                 }
 
                 f += v * v;
@@ -53,27 +53,27 @@ namespace TabuSearch
 
             for (var k = 1; k <= MaxIterations; k++)
             {
-                var bestFitness = Double.MaxValue;
+                var bestFitness = double.MaxValue;
                 var bestSolution = Problem.SolutionArray;
-                var bestIteration = 0;
+                var bestIndex = 1;
 
-                for (var i = 1; i < solution.Count; i++)
+                for (var i = 1; i <= solution.Count; i++)
                 {
                     var possibleSolution = Flip(i);
                     var possibleFitness= ValueFlip(i);
-                    if (k >= m[i] || possibleFitness < fitness)
+                    if (k >= m[i-1] || possibleFitness < fitness)
                     {
                         if (possibleFitness < bestFitness)
                         {
                             bestFitness = possibleFitness;
                             bestSolution = possibleSolution;
-                            bestIteration = i;
+                            bestIndex = i;
                         }
                     }
                 }
                 Problem.SolutionArray = bestSolution;
                 Problem.CalculateFitness();
-                m[bestIteration] = k + minTabu + rand.Next(extraTabu);
+                m[bestIndex-1] = k + minTabu + rand.Next(extraTabu);
                 if (bestFitness < fitness)
                 {
                     solution = bestSolution;
@@ -87,7 +87,7 @@ namespace TabuSearch
         public List<int> Flip(int index)
         {
             var flippedSolution = new List<int>(Problem.SolutionArray);
-            flippedSolution[index] *= -1;
+            flippedSolution[index-1] *= -1;
 
             return flippedSolution;
         }
