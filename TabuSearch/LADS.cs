@@ -19,6 +19,12 @@ namespace TabuSearch
             SolutionArray = new List<int>();
         }
 
+        public LADS(IProblem problem)
+        {
+            this.SolutionArray = problem.SolutionArray;
+            this.SolutionLength = problem.SolutionArray.Count;
+        }
+
         public double CalculateFitness()
         {
             CalculateAperiodicAutocorrelation();

@@ -4,34 +4,32 @@ using System.Text;
 
 namespace TabuSearch
 {
-    public class TabuSearch
+    public class TabuSearch : ISolver
     {
-        public IProblem Problem { get; }
         public int MaxIterations { get; }
         public int ExtraTabu { get; }
         public int MinTabu { get; }
 
-        public TabuSearch(IProblem problem, int maxIterations, int minTabu = 20, int extraTabu = 4)
+        public TabuSearch(int maxIterations, int minTabu = 20, int extraTabu = 4)
         {
-            this.Problem = problem;
             this.MaxIterations = maxIterations;
             this.MinTabu = minTabu;
             this.ExtraTabu = extraTabu;
         }
 
-        public (List<int> solution, double fitness) Solve()
+        public (List<int> solution, double fitness) Solve(IProblem problem)
         {
             var rand = new Random();
-            var tabuList = CreateEmptyTabuList();
+            var tabuList = CreateEmptyTabuList(problem);
 
-            var solution = new List<int>(Problem.SolutionArray);
-            var fitness = Problem.CalculateFitness();
+            var solution = new List<int>(problem.SolutionArray);
+            var fitness = problem.CalculateFitness();
 
             for (var k = 1; k <= MaxIterations; k++)
             {
-                var bestMove = FindBestMove(k, tabuList, fitness);
-                Problem.SolutionArray = bestMove.bestSolutionInIteration;
-                Problem.CalculateFitness();
+                var bestMove = FindBestMove(problem, k, tabuList, fitness);
+                problem.SolutionArray = bestMove.bestSolutionInIteration; 
+                problem.CalculateFitness();
                 tabuList[bestMove.bestIndexInIteration-1] = k + MinTabu + rand.Next(ExtraTabu);
 
                 if (!(bestMove.bestFitnessInIteration < fitness)) continue;
@@ -40,21 +38,21 @@ namespace TabuSearch
                 fitness = bestMove.bestFitnessInIteration;
             }
 
-            Problem.SolutionArray = solution;
+            problem.SolutionArray = solution;
 
             return (solution, fitness);
         }
 
-        private (double bestFitnessInIteration, List<int> bestSolutionInIteration, int bestIndexInIteration) FindBestMove(int iteration, List<int> tabuList, double fitness)
+        private (double bestFitnessInIteration, List<int> bestSolutionInIteration, int bestIndexInIteration) FindBestMove(IProblem problem, int iteration, List<int> tabuList, double fitness)
         {
             var bestFitnessInIteration = double.MaxValue;
-            var bestSolutionInIteration = Problem.SolutionArray;
+            var bestSolutionInIteration = problem.SolutionArray;
             var bestIndexInIteration = 1;
 
             for (var i = 1; i <= bestSolutionInIteration.Count; i++)
             {
-                var possibleSolution = Flip(i);
-                var possibleFitness = ValueFlip(i);
+                var possibleSolution = Flip(problem, i);
+                var possibleFitness = ValueFlip(problem, i);
                 if ((iteration < tabuList[i - 1] && !(possibleFitness < fitness)) ||
                     (!(possibleFitness < bestFitnessInIteration))) continue;
 
@@ -66,39 +64,39 @@ namespace TabuSearch
             return (bestFitnessInIteration, bestSolutionInIteration, bestIndexInIteration);
         }
 
-        private List<int> CreateEmptyTabuList()
+        private List<int> CreateEmptyTabuList(IProblem problem)
         {
             var tabuList = new List<int>();
-            for (var i = 0; i < Problem.SolutionArray.Count; i++)
+            for (var i = 0; i < problem.SolutionArray.Count; i++)
             {
                 tabuList.Add(0);
             }
 
             return tabuList;
         }
-        private double ValueFlip(int valueIndex)
+        private double ValueFlip(IProblem problem, int valueIndex)
         {
             var fitness = 0.0;
-            for (var p = 0; p < Problem.SolutionArray.Count - 1; p++)
+            for (var p = 0; p < problem.SolutionArray.Count - 1; p++)
             {
-                var value = Problem.Autocorrelations[p];
-                if (p < Problem.SolutionArray.Count - valueIndex)
+                var value = problem.Autocorrelations[p];
+                if (p < problem.SolutionArray.Count - valueIndex)
                 {
-                    value -= 2 * Problem.AutocorrelationProducts[p][valueIndex - 1];
+                    value -= 2 * problem.AutocorrelationProducts[p][valueIndex - 1];
                 }
 
                 if (p < valueIndex - 1)
                 {
-                    value -= 2 * Problem.AutocorrelationProducts[p][valueIndex - 1 - p - 1];
+                    value -= 2 * problem.AutocorrelationProducts[p][valueIndex - 1 - p - 1];
                 }
 
                 fitness += value * value;
             }
             return fitness;
         }
-        private List<int> Flip(int index)
+        private List<int> Flip(IProblem problem, int index)
         {
-            var flippedSolution = new List<int>(Problem.SolutionArray);
+            var flippedSolution = new List<int>(problem.SolutionArray);
             flippedSolution[index-1] *= -1;
 
             return flippedSolution;
