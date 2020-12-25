@@ -21,7 +21,7 @@ namespace TabuSearch
 
         public LADS(IProblem problem)
         {
-            this.SolutionArray = problem.SolutionArray;
+            this.SolutionArray = new List<int>(problem.SolutionArray);
             this.SolutionLength = problem.SolutionArray.Count;
         }
 

@@ -6,9 +6,9 @@ namespace TabuSearch
 {
     public class TabuSearch : ISolver
     {
-        public int MaxIterations { get; }
-        public int ExtraTabu { get; }
-        public int MinTabu { get; }
+        public int MaxIterations { get; set; }
+        public int ExtraTabu { get; set; }
+        public int MinTabu { get; set; }
 
         public TabuSearch(int maxIterations, int minTabu = 20, int extraTabu = 4)
         {
@@ -17,7 +17,7 @@ namespace TabuSearch
             this.ExtraTabu = extraTabu;
         }
 
-        public (List<int> solution, double fitness) Solve(IProblem problem)
+        public ResultModel Solve(IProblem problem)
         {
             var rand = new Random();
             var tabuList = CreateEmptyTabuList(problem);
@@ -40,7 +40,7 @@ namespace TabuSearch
 
             problem.SolutionArray = solution;
 
-            return (solution, fitness);
+            return new ResultModel(solution, fitness);
         }
 
         private (double bestFitnessInIteration, List<int> bestSolutionInIteration, int bestIndexInIteration) FindBestMove(IProblem problem, int iteration, List<int> tabuList, double fitness)
