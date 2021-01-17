@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace TabuSearch
 {
@@ -19,6 +20,7 @@ namespace TabuSearch
 
         public ResultModel Solve(IProblem problem)
         {
+            //start timer
             var rand = new Random();
             var tabuList = CreateEmptyTabuList(problem);
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
@@ -9,14 +10,29 @@ namespace TabuSearch
     {
         public List<ResultModel> Run(int iterations, IProblem problem, ISolver solver, int searchIterations, int minTabu, int extraTabu)
         {
+            var maxSeconds = 60;
             var results = new List<ResultModel>();
             solver.MaxIterations = searchIterations;
             solver.MinTabu = minTabu;
             solver.ExtraTabu = extraTabu;
+            var stopWatch = new Stopwatch();
             for (var i = 0; i < iterations; i++)
             {
-                var result = solver.Solve(new LADS(problem));
-                results.Add(result);
+                stopWatch.Start();
+                Console.WriteLine($"Algorithm run number {i}");
+                var bestResult = new ResultModel();
+                var numberOfTries = 0;
+                while (stopWatch.Elapsed.TotalSeconds < maxSeconds)
+                {
+                    numberOfTries++;
+                    var result = solver.Solve(new LADS(problem));
+                    if (result > bestResult)
+                        bestResult = result;
+                }
+                stopWatch.Stop();
+                stopWatch.Restart();
+                Console.WriteLine($"Number of tries {numberOfTries} for max iterations {searchIterations}");
+                results.Add(bestResult);
             }
 
             return results;
