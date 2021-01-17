@@ -8,9 +8,8 @@ namespace TabuSearch
 {
     public class SearchRunner
     {
-        public List<ResultModel> Run(int iterations, IProblem problem, ISolver solver, int searchIterations, int minTabu, int extraTabu)
+        public List<ResultModel> Run(int iterations, IProblem problem, ISolver solver, int searchIterations, int minTabu, int extraTabu, int timeLimitInSeconds)
         {
-            var maxSeconds = 60;
             var results = new List<ResultModel>();
             solver.MaxIterations = searchIterations;
             solver.MinTabu = minTabu;
@@ -22,7 +21,7 @@ namespace TabuSearch
                 Console.WriteLine($"Algorithm run number {i}");
                 var bestResult = new ResultModel();
                 var numberOfTries = 0;
-                while (stopWatch.Elapsed.TotalSeconds < maxSeconds)
+                while (stopWatch.Elapsed.TotalSeconds < timeLimitInSeconds)
                 {
                     numberOfTries++;
                     var result = solver.Solve(new LADS(problem));
@@ -40,12 +39,12 @@ namespace TabuSearch
         }
 
         public List<List<ResultModel>> RunWithMultipleIterations(int iterations,
-            IProblem problem, ISolver solver, List<int> searchIterationsList, int minTabu, int extraTabu)
+            IProblem problem, ISolver solver, List<int> searchIterationsList, int minTabu, int extraTabu, int timeLimitInSeconds)
         {
             var output = new List<List<ResultModel>>();
             foreach (var i in searchIterationsList)
             {
-                var results = Run(iterations, new LADS(problem), solver, i, minTabu, extraTabu);
+                var results = Run(iterations, new LADS(problem), solver, i, minTabu, extraTabu, timeLimitInSeconds);
                 output.Add(results);
             }
 
@@ -53,12 +52,12 @@ namespace TabuSearch
         }
 
         public List<List<ResultModel>> RunWithMultipleMinTabu(int iterations, IProblem problem, ISolver solver, int searchIteration,
-            List<int> minTabuList, int extraTabu)
+            List<int> minTabuList, int extraTabu, int timeLimitInSeconds)
         {
             var output = new List<List<ResultModel>>();
             foreach (var i in minTabuList)
             {
-                var results = Run(iterations, new LADS(problem), solver, searchIteration, i, extraTabu);
+                var results = Run(iterations, new LADS(problem), solver, searchIteration, i, extraTabu, timeLimitInSeconds);
                 output.Add(results);
             }
 
@@ -66,12 +65,12 @@ namespace TabuSearch
         }
 
         public List<List<ResultModel>> RunWithMultipleExtraTabu(int iterations, IProblem problem, ISolver solver, int searchIteration,
-            int minTabu, List<int> extraTabu)
+            int minTabu, List<int> extraTabu, int timeLimitInSeconds)
         {
             var output = new List<List<ResultModel>>();
             foreach (var i in extraTabu)
             {
-                var results = Run(iterations, new LADS(problem), solver, searchIteration, minTabu, i);
+                var results = Run(iterations, new LADS(problem), solver, searchIteration, minTabu, i, timeLimitInSeconds);
                 output.Add(results);
             }
 
