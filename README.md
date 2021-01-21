@@ -45,3 +45,4 @@ Here is the result of the run with time limit 120s (solution length = 100, algor
 ## Summary
 There is hard to draw a conclusion. whether it is better to run the algorithm many times but shorter or few times but longer. There should be at least 500 iteration to allow the algorithm to find some good solution and it probably will improve a little over time, but there is no significant different seen on a plot. 
 
+Increasing the number of algorithm runs and solution length can make the difference and trend more visible, but the possibilites are limited by the hardware efficiency. Last test took around 8h to complete. 
