@@ -16,4 +16,32 @@ Contains methods to generate box and whiskers plot and series of those plots. Us
 ### Program.cs - main class
 Contains main code of the program execution. 
 ## Results
-TODO
+Different parameters were checked to find the best possible solution. Extra tabu = 4 and min tabu = 20 were used as initial values, because they were suggested in the paper. 
+
+Best results were achieved for Min Tabu equal 30 (solution length = 100, algorithm runs = 50, search interations = 100, extra tabu = 4). 
+
+![Impact of the Min Tabu parameter value on the solution](https://github.com/patrycjabru/Tabu_Search/blob/master/images/multiple%20results%20min%20tabu.png?raw=true)
+
+Best results were achieved for Extra Tabu equal 15 (solution length = 100, algorithm runs = 50, search interations = 100, min tabu = 20). 
+
+![Impact of the Extra Tabu parameter value on the solution](https://github.com/patrycjabru/Tabu_Search/blob/master/images/multiple%20results%20extra%20tabu.png?raw=true)
+
+Best results were achieved for Search Iteration equal 1000 (solution length = 100, algorithm runs = 100, min tabu = 4, extra tabu = 20). However, we can expect that longer calculation can lead to better results, but extends the calculation time. It means, that there is no optimal value of Search Iteration. But the dependency between Search Iteration and time can be measured this way. 
+
+![Impact of the Extra Tabu parameter value on the solution](https://github.com/patrycjabru/Tabu_Search/blob/master/images/multiple%20results%20iterations%20-%20without%20time.png?raw=true)
+
+Searching with time limit is about calling the algoritm using the same initialy generated solution as many times as can fit in the time limit. Here is the result of the run with time limit 60s (solution length = 100, algorithm runs = 20, search interations = 100, min tabu = 20, extra tabu = 4).
+
+![Impact of the Extra Tabu parameter value on the solution](https://github.com/patrycjabru/Tabu_Search/blob/master/images/multiple%20results%20iterations%20-%2060s%205.png?raw=true)
+
+Here is the result of the run with time limit 60s (solution length = 100, algorithm runs = 10, search interations = 100, min tabu = 20, extra tabu = 4).
+
+![Impact of the Extra Tabu parameter value on the solution](https://github.com/patrycjabru/Tabu_Search/blob/master/images/multiple%20results%20iterations%20-%2060s%202.png?raw=true)
+
+Here is the result of the run with time limit 120s (solution length = 100, algorithm runs = 50, search interations = 100, min tabu = 20, extra tabu = 4).
+
+![Impact of the Extra Tabu parameter value on the solution](https://github.com/patrycjabru/Tabu_Search/blob/master/images/multiple%20results%20iterations%20-%20120s.png?raw=true)
+
+## Summary
+There is hard to draw a conclusion. whether it is better to run the algorithm many times but shorter or few times but longer. There should be at least 500 iteration to allow the algorithm to find some good solution and it probably will improve a little over time, but there is no significant different seen on a plot. 
+
